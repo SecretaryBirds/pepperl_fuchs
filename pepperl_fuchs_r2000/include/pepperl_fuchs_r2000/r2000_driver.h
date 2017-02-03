@@ -66,7 +66,7 @@ public:
 
     //! Start capturing laserdata: Requests a handle and begin retrieving data from the scanner
     //! @returns True in case of success, False otherwise
-    bool startCapturingTCP();
+    bool startCapturingTCP(int start_angle, uint32_t max_num_points_scan);
 
     //! Start capturing laserdata: Requests a handle and begin retrieving data from the scanner
     //! @returns True in case of success, False otherwise

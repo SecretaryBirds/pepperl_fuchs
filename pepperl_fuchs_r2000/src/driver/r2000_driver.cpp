@@ -75,12 +75,12 @@ R2000Driver::~R2000Driver()
 }
 
 //-----------------------------------------------------------------------------
-bool R2000Driver::startCapturingTCP()
+bool R2000Driver::startCapturingTCP(int start_angle, uint32_t max_num_points_scan)
 {
     if( !checkConnection() )
         return false;
 
-    handle_info_ = command_interface_->requestHandleTCP();
+    handle_info_ = command_interface_->requestHandleTCP(start_angle, max_num_points_scan);
     if( !handle_info_ )
         return false;
 

@@ -275,12 +275,13 @@ std::vector< std::string > HttpCommandInterface::getParameterList()
 }
 
 //-----------------------------------------------------------------------------
-boost::optional<HandleInfo> HttpCommandInterface::requestHandleTCP(int start_angle)
+boost::optional<HandleInfo> HttpCommandInterface::requestHandleTCP(int start_angle, uint32_t max_num_points_scan)
 {
     // Prepare HTTP request
     std::map< std::string, std::string > params;
     params["packet_type"] = "C";
     params["start_angle"] = std::to_string(start_angle);
+    params["max_num_points_scan"] = std::to_string(max_num_points_scan);
 
     // Request handle via HTTP/JSON request/response
     if( !sendHttpCommand("request_handle_tcp", params) || !checkErrorCode() )

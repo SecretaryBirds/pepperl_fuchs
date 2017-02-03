@@ -79,6 +79,12 @@ private:
     //! samples_per_scan parameter
     int samples_per_scan_;
 
+    //! start_angle parameter
+    double start_angle_;
+
+    //! stop_angle parameter
+    double stop_angle_;
+
     //! Pointer to driver
     R2000Driver* driver_;
 };

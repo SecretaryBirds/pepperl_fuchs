@@ -43,6 +43,8 @@ R2000Node::R2000Node():nh_("~")
     nh_.param("scanner_ip",scanner_ip_,std::string(""));
     nh_.param("scan_frequency",scan_frequency_,35);
     nh_.param("samples_per_scan",samples_per_scan_,3600);
+    nh_.param("start_angle", start_angle_, -M_PI);
+    nh_.param("stop_angle", stop_angle_, M_PI);
 
     if( scanner_ip_ == "" )
     {
@@ -92,7 +94,9 @@ bool R2000Node::connect()
     // Start capturing scanner data
     //-------------------------------------------------------------------------
     std::cout << "Starting capturing: ";
-    if( driver_->startCapturingTCP() )
+    int start_angle_int = static_cast<int>(this->start_angle_*180.0/M_PI * 10000);
+    uint32_t max_num_points_scan = static_cast<uint32_t>(this->samples_per_scan_ * ((this->stop_angle_ - this->start_angle_)/(2*M_PI)));
+    if( driver_->startCapturingTCP(start_angle_int, max_num_points_scan) )
         std::cout << "OK" << std::endl;
     else
     {
@@ -122,9 +126,9 @@ void R2000Node::getScanData(const ros::TimerEvent &e)
     scanmsg.header.frame_id = frame_id_;
     scanmsg.header.stamp = ros::Time::now();
 
-    scanmsg.angle_min = -M_PI;
-    scanmsg.angle_max = +M_PI;
-    scanmsg.angle_increment = 2*M_PI/float(scandata.distance_data.size());
+    scanmsg.angle_min = static_cast<float>(start_angle_);
+    scanmsg.angle_max = static_cast<float>(stop_angle_);
+    scanmsg.angle_increment = static_cast<float>((stop_angle_-start_angle_) / scandata.distance_data.size());
     scanmsg.time_increment = 1/35.0f/float(scandata.distance_data.size());
 
     scanmsg.scan_time = 1/std::atof(driver_->getParametersCached().at("scan_frequency").c_str());
